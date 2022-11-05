@@ -1,11 +1,23 @@
 import { NETWORK_PARAMS } from '../network.js';
 import { switchChain } from '../wallet.js';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import {
+    selectAddress,
+} from '../database.js';
+import { connectWalletOnClick } from '../wallet.js';
 
 export function Header() {
+    const address = useSelector(selectAddress);
     return (
         <header>
-            <h1><Link to="/">2112 Grid Trials</Link></h1>
+            <div className="left">
+                <h1><Link to="/">2112 Grid Trials</Link></h1>
+            </div>
+            <div className="right">
+                {address && <span>{address}</span>}
+                {!address && <button onClick={connectWalletOnClick}>connect</button>}
+            </div>
         </header>
     );
 }
