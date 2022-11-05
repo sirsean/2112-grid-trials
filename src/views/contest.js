@@ -176,7 +176,13 @@ function RegisterRunnerSelection({ contest, runner }) {
                     </div>
                     <div className="col" style={{padding: '0.8em'}}>
                         <h2>T{runner.attributes.Talent}::{runner.attributes.Faction.replace('The ', '').replace(/s$/, '')}</h2>
-                        {!isRegistering && isOwner && <div><button onClick={onClick}>Register</button></div>}
+                        {!isRegistering && isOwner &&
+                            <div>
+                                <button onClick={onClick}>Register</button>
+                                <p>There will be two transactions, first to approve your DATA for this contract, and then to register and pay the entry fee.</p>
+                            </div>}
+                        {!isRegistering && !isOwner &&
+                            <p>You can only register runners you own.</p>}
                         {isRegistering && <div><em>registering</em></div>}
                     </div>
                 </div>
