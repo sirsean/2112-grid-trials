@@ -172,7 +172,7 @@ function RegisterRunnerSelection({ contest, runner }) {
             <div className="RegisterRunnerSelection">
                 <div className="row">
                     <div className="col">
-                        <img src={runner.image} alt={runner.id} />
+                        <RunnerBox runnerId={runner.id} />
                     </div>
                     <div className="col" style={{padding: '0.8em'}}>
                         <h2>T{runner.attributes.Talent}::{runner.attributes.Faction.replace('The ', '').replace(/s$/, '')}</h2>

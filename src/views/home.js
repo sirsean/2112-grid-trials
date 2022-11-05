@@ -30,6 +30,10 @@ export default function Home() {
                 <p>Each contest may choose a different metric for choosing winners, such as "most total DATA", "best single run", "highest average DATA", or "most notoriety points". You will know this before you enter.</p>
                 <p>Once the contest is over, the winners can collect their DATA winnings. Anybody can click that button, but the DATA gets paid to the winner.</p>
                 <p>The contests are saved on the blockchain, and never go away. Even once a new contest starts, you can always go back and collect your winnings from old contests.</p>
+                <ul>
+                    <li><a target="_blank" href="https://github.com/sirsean/2112-grid-trials">Github: 2112-grid-trials (dapp)</a></li>
+                    <li><a target="_blank" href="https://github.com/sirsean/2112-contest-contract">Github: 2112-contest-contract (contracts)</a></li>
+                </ul>
             </div>
         </div>
     );
