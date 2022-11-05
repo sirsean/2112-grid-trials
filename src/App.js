@@ -1,25 +1,30 @@
-import logo from './logo.svg';
+import React from 'react';
+import { Provider } from 'react-redux';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+} from 'react-router-dom';
 import './App.css';
+import { store } from './database.js';
+import Home from './views/home.js';
+import CurrentContest from './views/current_contest.js';
+import Registry from './views/registry.js';
+import { Contest } from './views/contest.js';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <Provider store={store}>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/current" element={<CurrentContest />} />
+                    <Route path="/registry" element={<Registry />} />
+                    <Route path="/contest/:index" element={<Contest />} />
+                </Routes>
+            </Router>
+        </Provider>
+    );
 }
 
 export default App;
