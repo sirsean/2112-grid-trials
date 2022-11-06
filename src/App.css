@@ -6,6 +6,7 @@ header {
     display: flex;
     flex-direction: row;
     width: 100%;
+    align-items: center;
 }
 
 header .left {
@@ -42,6 +43,7 @@ a {
 h1 {
     font-family: EvangelionRegular;
     font-weight: 100;
+    letter-spacing: 2.5px;
     padding: 0;
     margin: 0.2em;
     font-size: 3.5em;
@@ -63,7 +65,7 @@ input {
     border: none;
     border-bottom: 1px solid var(--blue);
     background-color: var(--black);
-    color: var(--yellow);
+    color: var(--darkyellow);
     outline: none;
     font-family: 'SupplyMono', monospace;
     font-size: 2em;
@@ -78,25 +80,28 @@ button {
     border-radius: 3px;
     font-family: 'SupplyMono', monospace;
     color: var(--yellow);
-    font-size: 1.8em;
+    font-size: 1.4em;
     padding: 0.25em 0.3em 0.05em 0.3em;
 }
 
 hr {
-    border-bottom: 8px solid var(--yellow);
+    border-bottom: 6px solid var(--darkyellow);
     border-style: solid;
     color: var(--black);
     margin: 2em 0;
 }
 
 .Home p {
-    margin: 1em 3em;
+    margin: 1em 0;
     font-size: 1.6em;
 }
 
 .Home ul {
-    margin-left: 4em;
     font-size: 3em;
+}
+
+.Home .errata {
+    line-height: 1.4em;
 }
 
 .Home .errata p {
@@ -114,7 +119,8 @@ hr {
 .Markdown {
     display: block;
     padding: 0.4em;
-    margin: 0.4em 0.8em;
+    margin-top: 0.8em;
+    margin-bottom: 1.4em;
     font-size: 1.2em;
     background-color: #2C2E3B;
     border-radius: 5px;
@@ -123,13 +129,13 @@ hr {
 .Markdown h1 {
     font-family: SupplyMono;
     font-size: 2em;
-    color: var(--yellow);
+    color: var(--darkyellow);
 }
 
 .Markdown h2 {
     font-family: SupplyMono;
     font-size: 1.5em;
-    color: var(--yellow);
+    color: var(--darkyellow);
 }
 
 .AttrRow {
@@ -141,7 +147,7 @@ hr {
 }
 
 .AttrRow .value {
-    color: var(--yellow);
+    color: var(--darkyellow);
 }
 
 .RegisterRunnerSelection img {
@@ -168,7 +174,7 @@ hr {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    color: var(--yellow);
+    color: var(--darkyellow);
     text-shadow: 1px 1px 2px var(--black);
     font-size: 1.6em;
 }

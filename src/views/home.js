@@ -19,7 +19,7 @@ export default function Home() {
                     <li><Link to="/registry">Contest Registry</Link></li>
                 </ul>}
             {window.ethereum && !address &&
-                <p>To participate, please <button onClick={connectWalletOnClick}>connect your wallet</button>.</p>}
+                <p>To participate, please <button onClick={connectWalletOnClick}>connect your wallet</button></p>}
             {!window.ethereum && <p>To view the trials, you will need to install a wallet.</p>}
             <hr />
             <div className="errata">

@@ -2,6 +2,7 @@
     --black: #000019;
     --blue: #525DDD;
     --yellow: #F2CB04;
+    --darkyellow: #C1A203;
 }
 
 @font-face {
@@ -18,7 +19,8 @@
 }
 
 body {
-    margin: 0;
+    margin: 0 auto;
+    max-width: 800px;
     font-family: SupplyMono, monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
