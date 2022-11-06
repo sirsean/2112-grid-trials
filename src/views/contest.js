@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import {
     useParams,
 } from 'react-router-dom';
-import { isCorrectChainAsync } from '../wallet.js';
 import {
     fetchContestByIndex,
     fetchContest,
@@ -17,14 +16,10 @@ import {
 } from '../client.js';
 import {
     store,
-    selectHasWallet,
-    selectIsCorrectChain,
     selectAddress,
     selectViewRunContestAddress,
     selectContest,
     selectCanceling,
-    setHasWallet,
-    setIsCorrectChain,
     setViewRunContestAddress,
     setContest,
     setCanceling,
@@ -39,8 +34,7 @@ import {
     notCollecting,
     selectCollecting,
 } from '../database.js';
-import { retryOperation } from '../util.js';
-import { Header, NoWallet, SwitchChain } from './layout.js';
+import { Page } from './layout.js';
 import { marked } from 'marked';
 import sanitizeHtml from 'sanitize-html';
 
@@ -355,39 +349,26 @@ export function DisplayContest() {
     }
 }
 
+function RenderPage() {
+    return (
+        <div className="Contest">
+            <DisplayContest />
+        </div>
+    );
+}
+
 export function Contest() {
     const { index } = useParams();
-    const hasWallet = useSelector(selectHasWallet);
-    const correctChain = useSelector(selectIsCorrectChain);
-    React.useEffect(() => {
-        store.dispatch(setHasWallet(!!window.ethereum));
-        const checkChain = async () => {
-            return retryOperation(isCorrectChainAsync, 100, 5).then(isCorrect => {
-                store.dispatch(setIsCorrectChain(isCorrect));
-                return isCorrect;
-            });
-        };
-        checkChain()
-            .then(isCorrect => {
-                if (isCorrect) {
-                    return fetchContestByIndex(index).then(contestAddress => {
-                        store.dispatch(setViewRunContestAddress(contestAddress));
-                    }).catch(e => {
-                        console.error(e.reason);
-                    });
-                }
-            });
-    }, [index]);
-    if (!hasWallet) {
-        return <NoWallet />;
-    } else if (!correctChain) {
-        return <SwitchChain />;
-    } else {
-        return (
-            <div className="Contest">
-                <Header />
-                <DisplayContest />
-            </div>
-        );
+    const onIsCorrect = () => {
+        return fetchContestByIndex(index).then(contestAddress => {
+            store.dispatch(setViewRunContestAddress(contestAddress));
+        }).catch(e => {
+            console.error(e.reason);
+        });
     }
+    return (
+        <Page onIsCorrect={onIsCorrect}>
+            <RenderPage />
+        </Page>
+    );
 }

@@ -1,11 +1,18 @@
+import React from 'react';
 import { NETWORK_PARAMS } from '../network.js';
 import { switchChain } from '../wallet.js';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
+    store,
     selectAddress,
+    selectHasWallet,
+    selectIsCorrectChain,
+    setHasWallet,
+    setIsCorrectChain,
 } from '../database.js';
-import { connectWalletOnClick } from '../wallet.js';
+import { connectWalletOnClick, isCorrectChainAsync } from '../wallet.js';
+import { retryOperation } from '../util.js';
 
 export function Header() {
     const address = useSelector(selectAddress);
@@ -40,4 +47,36 @@ export function SwitchChain() {
             <p><button onClick={onClick}>Switch to {NETWORK_PARAMS.chainName}</button></p>
         </div>
     );
+}
+
+export function Page({ children, onIsCorrect }) {
+    const hasWallet = useSelector(selectHasWallet);
+    const correctChain = useSelector(selectIsCorrectChain);
+    React.useEffect(() => {
+        store.dispatch(setHasWallet(!!window.ethereum));
+        const checkChain = async () => {
+            return retryOperation(isCorrectChainAsync, 100, 5).then(isCorrect => {
+                store.dispatch(setIsCorrectChain(isCorrect));
+                return isCorrect;
+            });
+        };
+        checkChain()
+            .then(isCorrect => {
+                if (isCorrect) {
+                    return onIsCorrect();
+                }
+            });
+    }, [onIsCorrect]);
+    if (!hasWallet) {
+        return <NoWallet />;
+    } else if (!correctChain) {
+        return <SwitchChain />;
+    } else {
+        return (
+            <div>
+                <Header />
+                <div>{children}</div>
+            </div>
+        );
+    }
 }
