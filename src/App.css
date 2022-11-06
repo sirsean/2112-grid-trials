@@ -130,6 +130,7 @@ hr {
     font-family: SupplyMono;
     font-size: 2em;
     color: var(--darkyellow);
+    letter-spacing: unset;
 }
 
 .Markdown h2 {
@@ -148,10 +149,6 @@ hr {
 
 .AttrRow .value {
     color: var(--darkyellow);
-}
-
-.RegisterRunnerSelection img {
-    width: 200px;
 }
 
 .imgWrapper {
@@ -174,7 +171,7 @@ hr {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    color: var(--darkyellow);
+    color: var(--yellow);
     text-shadow: 1px 1px 2px var(--black);
     font-size: 1.6em;
 }
