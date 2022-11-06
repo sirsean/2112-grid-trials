@@ -60,7 +60,7 @@ export default function Registry() {
                     <ul>
                         {[...Array(numContests).keys()].reverse().map(index => <ContestLink key={index} index={index} />)}
                     </ul>
-                    <p><a target="_blank" href={contractHref}>Registry Contract</a></p>
+                    <p><a target="_blank" rel="noreferrer" href={contractHref}>Registry Contract</a></p>
                 </div>
             );
         } else {

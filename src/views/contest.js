@@ -129,7 +129,7 @@ function RunnerBox({ runnerId }) {
     const imgSrc = `https://2112-api.sirsean.workers.dev/runner/${runnerId}.png`;
     return (
         <div className="imgWrapper">
-            <a href={href} target="_blank"><img src={imgSrc} alt={runnerId} /></a>
+            <a href={href} target="_blank" rel="noreferrer"><img src={imgSrc} alt={runnerId} /></a>
             <span className="runnerId">{runnerId}</span>
         </div>
     );
@@ -227,7 +227,7 @@ function UnstartedContest({ contest }) {
         <div className="DisplayContest">
             <Markdown text={contest.description} />
             {attrs.map(([k, v]) => <AttrRow key={k} name={k} value={v} />)}
-            <p><a target="_blank" href={contractHref}>Contest Contract</a></p>
+            <p><a target="_blank" rel="noreferrer" href={contractHref}>Contest Contract</a></p>
             <RegisterRunnerForm contest={contest} />
             <hr />
             <div className="row wrap">
