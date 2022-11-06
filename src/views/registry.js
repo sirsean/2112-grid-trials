@@ -16,6 +16,7 @@ import {
 } from '../database.js';
 import { retryOperation } from '../util.js';
 import { Header, NoWallet, SwitchChain } from './layout.js';
+import { REGISTRY_CONTRACT_ADDRESS } from '../network.js';
 
 function ContestLink({ index }) {
     const href = `/contest/${index}`;
@@ -50,6 +51,7 @@ export default function Registry() {
     } else if (!correctChain) {
         return <SwitchChain />;
     } else {
+        const contractHref = `https://polygonscan.com/address/${REGISTRY_CONTRACT_ADDRESS}`;
         if (numContests) {
             return (
                 <div className="Registry">
@@ -58,6 +60,7 @@ export default function Registry() {
                     <ul>
                         {[...Array(numContests).keys()].reverse().map(index => <ContestLink key={index} index={index} />)}
                     </ul>
+                    <p><a target="_blank" href={contractHref}>Registry Contract</a></p>
                 </div>
             );
         } else {

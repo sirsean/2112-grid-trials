@@ -221,38 +221,20 @@ function UnstartedContest({ contest }) {
         ['Second Place', formatData(contest.payoutSecond)],
         ['Third Place', formatData(contest.payoutThird)],
     ];
+    const runnerIds = contest.runnerIds.slice().reverse();
+    const contractHref = `https://polygonscan.com/address/${contest.contestAddress}`;
     return (
         <div className="DisplayContest">
             <Markdown text={contest.description} />
             {attrs.map(([k, v]) => <AttrRow key={k} name={k} value={v} />)}
+            <p><a target="_blank" href={contractHref}>Contest Contract</a></p>
             <RegisterRunnerForm contest={contest} />
             <hr />
             <div className="row wrap">
-                {contest.runnerIds.map(runnerId => <UnstartedContestRunnerRow key={runnerId} contest={contest} runnerId={runnerId} />)}
+                {runnerIds.map(runnerId => <UnstartedContestRunnerRow key={runnerId} contest={contest} runnerId={runnerId} />)}
             </div>
         </div>
     );
-}
-
-function DisplayContestForAddress({ contestAddress }) {
-    const contest = useSelector(selectContest);
-    React.useEffect(() => {
-        fetchContest(contestAddress)
-            .then(contest => {
-                store.dispatch(setContest(contest));
-            });
-    }, [contestAddress]);
-    if (contest) {
-        if (contest.canceled) {
-            return <CanceledContest contest={contest} />;
-        } else if (contest.winnersSet) {
-            return <StartedContest contest={contest} />;
-        } else if (contest.started) {
-            return <StartedContest contest={contest} />;
-        } else if (!contest.started) {
-            return <UnstartedContest contest={contest} />;
-        }
-    }
 }
 
 function CollectWinningsButton({ contest, score }) {
@@ -343,6 +325,27 @@ function StartedContest({ contest }) {
             {scores.map(score => <StartedContestRunnerRow key={score.runnerId} contest={contest} score={score} />)}
         </div>
     );
+}
+
+function DisplayContestForAddress({ contestAddress }) {
+    const contest = useSelector(selectContest);
+    React.useEffect(() => {
+        fetchContest(contestAddress)
+            .then(contest => {
+                store.dispatch(setContest(contest));
+            });
+    }, [contestAddress]);
+    if (contest) {
+        if (contest.canceled) {
+            return <CanceledContest contest={contest} />;
+        } else if (contest.winnersSet) {
+            return <StartedContest contest={contest} />;
+        } else if (contest.started) {
+            return <StartedContest contest={contest} />;
+        } else if (!contest.started) {
+            return <UnstartedContest contest={contest} />;
+        }
+    }
 }
 
 export function DisplayContest() {
