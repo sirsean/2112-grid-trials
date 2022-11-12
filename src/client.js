@@ -6,6 +6,10 @@ import RunContestABI from './abi/RunContest.js';
 import ERC20ABI from './abi/ERC20.js';
 import GameABI from './abi/Game.js';
 import { retryOperation } from './util.js';
+import {
+    store,
+    addRun,
+} from './database.js';
 
 function registryContract() {
     return loadContract(REGISTRY_CONTRACT_ADDRESS, ContestRegistryABI);
@@ -138,6 +142,7 @@ export async function runsPage(runnerIdSet, fromBlock, toBlock) {
         const run = runs[i];
         if (runnerIdSet.has(run.tokenId.toNumber())) {
             const r = await retryOperation(async () => { return await augmentRun(run) }, 200, 5);
+            store.dispatch(addRun(r));
             augmented.push(r);
         }
     }

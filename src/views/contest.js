@@ -16,6 +16,7 @@ import {
 } from '../client.js';
 import {
     store,
+    selectNow,
     selectAddress,
     selectViewRunContestAddress,
     selectContest,
@@ -29,7 +30,6 @@ import {
     setRegistering,
     selectRegistering,
     selectRunnerScores,
-    setRuns,
     setCollecting,
     notCollecting,
     selectCollecting,
@@ -56,9 +56,13 @@ function AttrRow(props) {
     );
 }
 
+function formatDate(date) {
+    return date.toISOString().replace(/\.\d{3}Z$/, ' UTC');
+}
+
 function formatTimestamp(timestamp) {
     if (timestamp) {
-        return (new Date(timestamp * 1000)).toISOString().replace(/\.000Z$/, ' UTC');
+        return formatDate(new Date(timestamp * 1000));
     }
 }
 
@@ -297,19 +301,19 @@ function StartedContestRunnerRow({ contest, score }) {
 }
 
 function StartedContest({ contest }) {
+    const now = useSelector(selectNow);
     const scores = useSelector(selectRunnerScores);
     const attrs = [
         ['Mode', contest.mode],
         ['Start', formatTimestamp(contest.startTimestamp)],
         ['End', formatTimestamp(contest.endTimestamp)],
+        ['Now', formatTimestamp(now)],
         ['First Place', formatData(contest.payoutFirst)],
         ['Second Place', formatData(contest.payoutSecond)],
         ['Third Place', formatData(contest.payoutThird)],
     ];
     React.useEffect(() => {
-        fetchRunsForContest(contest).then(runs => {
-            store.dispatch(setRuns(runs));
-        });
+        fetchRunsForContest(contest);
     }, [contest]);
     return (
         <div className="DisplayContest">

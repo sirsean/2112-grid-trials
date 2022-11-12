@@ -4,6 +4,7 @@ import sortBy from 'sort-by';
 const slice = createSlice({
     name: '2112-grid-trials',
     initialState: {
+        now: parseInt((new Date()).getTime() / 1000),
         hasWallet: false,
         isCorrectChain: false,
         address: null,
@@ -13,7 +14,7 @@ const slice = createSlice({
         canceling: {},
         runner: null,
         registering: false,
-        runs: [],
+        runsById: {},
         collecting: {},
     },
     reducers: {
@@ -50,8 +51,9 @@ const slice = createSlice({
         setRegistering: (state, action) => {
             state.registering = action.payload;
         },
-        setRuns: (state, action) => {
-            state.runs = action.payload;
+        addRun: (state, action) => {
+            const run = action.payload;
+            state.runsById[run.runId] = run;
         },
         setCollecting: (state, action) => {
             state.collecting[action.payload] = true;
@@ -72,7 +74,7 @@ export const setCanceling = slice.actions.setCanceling;
 export const notCanceling = slice.actions.notCanceling;
 export const setRunner = slice.actions.setRunner;
 export const setRegistering = slice.actions.setRegistering;
-export const setRuns = slice.actions.setRuns;
+export const addRun = slice.actions.addRun;
 export const setCollecting = slice.actions.setCollecting;
 export const notCollecting = slice.actions.notCollecting;
 
@@ -80,6 +82,7 @@ export const store = configureStore({
     reducer: slice.reducer,
 });
 
+export const selectNow = state => state.now;
 export const selectHasWallet = state => state.hasWallet;
 export const selectIsCorrectChain = state => state.isCorrectChain;
 export const selectAddress = state => state.address;
@@ -104,12 +107,17 @@ function sortByMode(mode) {
     }
 }
 
-export const selectRunnerScores = ({ runs, contest }) => {
+export const selectRunnerScores = ({ runsById, contest }) => {
+    const runs = Object.values(runsById).filter(run => {
+        return ((contest.startTimestamp <= run.startTime) && (contest.startTimestamp <= run.endTime) && (run.endTime <= contest.endTimestamp));
+    });
     const runsByRunner = runs.reduce((acc, run) => {
         acc[run.runnerId] ||= [];
         acc[run.runnerId].push(run);
         return acc;
     }, {});
+
+    const runnerIdSet = new Set(contest.runnerIds);
     
     let scores = Object.values(runsByRunner).map(runnerRuns => runnerRuns.reduce((acc, run) => {
         acc.runnerId = run.runnerId;
@@ -121,7 +129,9 @@ export const selectRunnerScores = ({ runs, contest }) => {
         }
         acc.average = (acc.data / acc.runs);
         return acc;
-    }, { runnerId: null, runs: 0, data: 0, np: 0, best: 0 }));
+    }, { runnerId: null, runs: 0, data: 0, np: 0, best: 0 })).filter(score => {
+        return runnerIdSet.has(score.runnerId);
+    });
 
     contest.runnerIds.forEach(runnerId => {
         if (!runsByRunner[runnerId]) {
