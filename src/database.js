@@ -1,6 +1,9 @@
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import sortBy from 'sort-by';
 
+const rawPersisted = localStorage.getItem('runsById');
+const persisted = rawPersisted ? JSON.parse(rawPersisted) : {};
+
 const slice = createSlice({
     name: '2112-grid-trials',
     initialState: {
@@ -14,7 +17,7 @@ const slice = createSlice({
         canceling: {},
         runner: null,
         registering: false,
-        runsById: {},
+        runsById: persisted,
         collecting: {},
     },
     reducers: {
@@ -81,6 +84,11 @@ export const notCollecting = slice.actions.notCollecting;
 export const store = configureStore({
     reducer: slice.reducer,
 });
+
+export function persistStorage() {
+    const state = store.getState();
+    localStorage.setItem('runsById', JSON.stringify(state.runsById));
+}
 
 export const selectNow = state => state.now;
 export const selectHasWallet = state => state.hasWallet;

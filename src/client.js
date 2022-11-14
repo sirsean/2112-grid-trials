@@ -9,6 +9,7 @@ import { retryOperation } from './util.js';
 import {
     store,
     addRun,
+    persistStorage,
 } from './database.js';
 
 function registryContract() {
@@ -120,13 +121,28 @@ async function fetchRunData(runId) {
     });
 }
 
-async function augmentRun(run) {
+async function augmentRunRaw(run) {
     return fetchRunData(run.runId).then(runData => {
         return {
             runnerId: run.tokenId.toNumber(),
             ...runData,
         };
     });
+}
+
+async function augmentRun(run) {
+    const state = store.getState();
+    const cached = state.runsById[run.runId];
+    if (cached) {
+        return cached;
+    } else {
+        return augmentRunRaw(run).then(augmented => {
+            if (augmented.endTime) {
+                store.dispatch(addRun(augmented));
+            }
+            return augmented;
+        });
+    }
 }
 
 async function filterRuns(fromBlock, toBlock) {
@@ -142,7 +158,6 @@ export async function runsPage(runnerIdSet, fromBlock, toBlock) {
         const run = runs[i];
         if (runnerIdSet.has(run.tokenId.toNumber())) {
             const r = await retryOperation(async () => { return await augmentRun(run) }, 200, 5);
-            store.dispatch(addRun(r));
             augmented.push(r);
         }
     }
@@ -167,6 +182,7 @@ export async function fetchRunsForContest({ startTimestamp, endTimestamp, runner
                 break;
             }
         } while(true);
+        persistStorage();
         return runs.filter(run => {
             return ((startTimestamp <= run.startTime) && (startTimestamp <= run.endTime) && (run.endTime <= endTimestamp));
         });
