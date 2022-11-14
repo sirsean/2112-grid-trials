@@ -294,6 +294,8 @@ function StartedContestRunnerRow({ contest, score }) {
             </div>
             <div className="col">
                 {attrs.map(([k, v]) => <AttrRow key={k} name={k} value={v} />)}
+            </div>
+            <div className="col">
                 <CollectWinningsButton contest={contest} score={score} />
             </div>
         </div>
